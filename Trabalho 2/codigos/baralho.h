@@ -7,18 +7,17 @@
 
 typedef struct baralho BARALHO;
 typedef struct carta CARTA;
+typedef struct instance INSTANCE;
 
-typedef struct relatorio RELATORIO;
+INSTANCE *criar_baralho(BARALHO *baralho, RELATORIO *relatorio);
 
-BARALHO *criar_baralho(BARALHO *baralho, RELATORIO *relatorio);
+boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x);
 
-boolean CORTA(BARALHO *baralho, int x);
+boolean SOBE(BARALHO *baralho, RELATORIO *relatorio, int x);
 
-boolean SOBE(BARALHO *baralho, int x);
+boolean VIRA(BARALHO *baralho, RELATORIO *relatorio);
 
-boolean VIRA(BARALHO *baralho);
-
-boolean VIRATOPO(BARALHO *baralho, int k);
+boolean VIRATOPO(BARALHO *baralho, RELATORIO *relatorio, int k);
 
 boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio);
 
@@ -27,6 +26,8 @@ int pegar_carta(BARALHO *baralho, int p);
 int POSICAO(BARALHO *baralho, int x);
 
 boolean MOSTRA(BARALHO *baralho);
+
+boolean apagar_baralho(BARALHO *baralho);
 
 boolean FIM(BARALHO *baralho, RELATORIO *relatorio);
 

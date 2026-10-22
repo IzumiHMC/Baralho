@@ -6,14 +6,22 @@
 #define FALSE 0
 
 typedef struct relatorio RELATORIO;
+typedef struct operacao OPERACAO;
 
 RELATORIO *criar_relatorio();
 
-boolean PUSH(RELATORIO *relatorio, char *operacao, int k);
+boolean PUSH(RELATORIO *relatorio, OPERACAO operacao);
 
-boolean POP(RELATORIO *relatorio);
+OPERACAO POP(RELATORIO *relatorio);
+
+boolean mostrar_relatorio(RELATORIO *relatorio);
 
 boolean apagar_relatorio(RELATORIO *relatorio);
 
+OPERACAO criar_operacao(char *comando, int k);
+
+char *comando_operacao(RELATORIO *relatorio);
+
+int k_operacao(RELATORIO *relatorio);
 
 #endif
