@@ -8,6 +8,16 @@
 typedef struct relatorio RELATORIO;
 typedef struct operacao OPERACAO;
 
+struct operacao{
+    char *comando;
+    int k;
+};
+
+struct relatorio{
+    OPERACAO comandos[100];
+    int inicio;
+};
+
 RELATORIO *criar_relatorio();
 
 boolean PUSH(RELATORIO *relatorio, OPERACAO operacao);

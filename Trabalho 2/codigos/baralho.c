@@ -6,11 +6,13 @@
 
 
 struct baralho{
-
+    CARTA *inicio;
+    int tam;
 };
 
 struct carta{
-
+    CARTA *proximo;
+    int num;
 };
 
 //eh so uma struct q guarda os ponteiros do baralho e relatorio
@@ -20,17 +22,69 @@ struct instance{
     RELATORIO *relatorio;
 };
 
-INSTANCE *criar_baralho(BARALHO *baralho, RELATORIO *relatorio){
+INSTANCE criar_baralho(BARALHO *baralho, RELATORIO *relatorio, int n){
     apagar_baralho(baralho);
     apagar_relatorio(relatorio);
 
-    INSTANCE *instance;
-
-    //alocar dinamicamente o baralho
+    INSTANCE instance = {NULL, NULL};
     
-    instance->relatorio = criar_relatorio();
+    BARALHO *prox_baralho = (BARALHO *)malloc(sizeof(BARALHO));
+    prox_baralho->inicio = NULL;
+    prox_baralho->tam = 0;
+    
+    for (int i = 1; i <= n; i++){
+        BarPUSH(prox_baralho,i);
+    }
+    
+    instance.baralho = prox_baralho;
+    instance.relatorio = criar_relatorio();
 
     return instance;
+}
+
+boolean BarPUSH(BARALHO *baralho, int x){
+    if (baralho != NULL){
+        CARTA *carta = (CARTA *)malloc(sizeof(CARTA));
+        carta->proximo = NULL;
+        carta->num = x;
+        if (baralho->inicio == NULL){
+            baralho->inicio = carta;
+        }
+        else{
+            CARTA *aux = baralho->inicio;
+            while (aux->proximo != NULL){
+                aux = aux->proximo;
+            }
+            aux->proximo = carta;
+        }
+        baralho->tam++;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+int BarPOP(BARALHO *baralho){
+    if (baralho != NULL && baralho->inicio != NULL){
+        int x = 0;
+        CARTA *aux = baralho->inicio;
+        CARTA *aux2 = NULL;
+        
+        while (aux->proximo != NULL){
+            aux2 = aux;
+            aux = aux->proximo;
+        }
+        x = aux->num;
+        if (aux == baralho->inicio){
+            baralho->inicio = NULL;
+        }
+        else{
+            aux2->proximo = NULL;
+        }
+        free(aux);
+        baralho->tam--;
+        return x;
+    }
+    return FALSE;
 }
 
 //adiciona ao relatorio
@@ -63,7 +117,7 @@ boolean VIRA(BARALHO *baralho, RELATORIO *relatorio){
 
         //code
 
-        PUSH(relatorio,criar_operacao("VIRA",NULL));
+        PUSH(relatorio,criar_operacao("VIRA",-727));
         return TRUE;
     }
     return FALSE;
@@ -133,17 +187,24 @@ int POSICAO(BARALHO *baralho, int x){
 
 boolean MOSTRA(BARALHO *baralho){
     if (baralho != NULL){
+        CARTA *aux = baralho->inicio;
+        while (aux != NULL){
+            printf("%d ",aux->num);
+            aux = aux->proximo;
+        }
+        printf("\n");
 
-        //code
-
+        return TRUE;
     }
     return FALSE;
 }
 
 boolean apagar_baralho(BARALHO *baralho){
     if (baralho != NULL){
-
-        //??
+        while (baralho->inicio != NULL){
+            BarPOP(baralho);
+        }
+        free(baralho);
 
         return TRUE;
     }
@@ -152,9 +213,8 @@ boolean apagar_baralho(BARALHO *baralho){
 
 boolean FIM(BARALHO *baralho, RELATORIO *relatorio){
     if (baralho != NULL && relatorio != NULL){
-
-        //code
-
+        apagar_baralho(baralho);
+        apagar_relatorio(relatorio);
 
         return TRUE;
     }

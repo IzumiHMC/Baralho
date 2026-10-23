@@ -6,19 +6,9 @@
 
 //implementacao de pilha sequencial estatica
 
-struct operacao{
-    char *comando;
-    int k;
-};
-
-struct relatorio{
-    OPERACAO comandos[100];
-    int inicio;
-};
-
 RELATORIO *criar_relatorio(){
     RELATORIO *relatorio = (RELATORIO *)malloc(sizeof(RELATORIO));
-    
+
     relatorio->inicio = 0;
 
     return relatorio;
@@ -61,6 +51,7 @@ OPERACAO POP(RELATORIO *relatorio){
         relatorio->inicio--;
         return relatorio->comandos[relatorio->inicio+1];
     }
+    return criar_operacao(NULL, FALSE);
 }
 
 //acho q depois vou apagar essa funcao, eh so pra debug
@@ -94,10 +85,12 @@ char *comando_operacao(RELATORIO *relatorio){
     if (relatorio != NULL && relatorio->inicio != 0){
         return relatorio->comandos[relatorio->inicio-1].comando;
     }
+    return NULL;
 }
 
 int k_operacao(RELATORIO *relatorio){
     if (relatorio != NULL && relatorio->inicio != 0){
         return relatorio->comandos[relatorio->inicio-1].k;
     }
+    return FALSE;
 }
