@@ -32,7 +32,7 @@ INSTANCE criar_baralho(BARALHO *baralho, RELATORIO *relatorio, int n){
     prox_baralho->inicio = NULL;
     prox_baralho->tam = 0;
     
-    for (int i = 1; i <= n; i++){
+    for (int i = n; i >= 1; i--){
         BarPUSH(prox_baralho,i);
     }
     
@@ -45,17 +45,14 @@ INSTANCE criar_baralho(BARALHO *baralho, RELATORIO *relatorio, int n){
 boolean BarPUSH(BARALHO *baralho, int x){
     if (baralho != NULL){
         CARTA *carta = (CARTA *)malloc(sizeof(CARTA));
-        carta->proximo = NULL;
         carta->num = x;
         if (baralho->inicio == NULL){
             baralho->inicio = carta;
+            carta->proximo = NULL;
         }
         else{
-            CARTA *aux = baralho->inicio;
-            while (aux->proximo != NULL){
-                aux = aux->proximo;
-            }
-            aux->proximo = carta;
+            carta->proximo = baralho->inicio;
+            baralho->inicio = carta;
         }
         baralho->tam++;
         return TRUE;
@@ -65,22 +62,19 @@ boolean BarPUSH(BARALHO *baralho, int x){
 
 int BarPOP(BARALHO *baralho){
     if (baralho != NULL && baralho->inicio != NULL){
-        int x = 0;
-        CARTA *aux = baralho->inicio;
-        CARTA *aux2 = NULL;
-        
-        while (aux->proximo != NULL){
-            aux2 = aux;
-            aux = aux->proximo;
-        }
-        x = aux->num;
-        if (aux == baralho->inicio){
+        int x;
+        x = baralho->inicio->num;
+        if (baralho->inicio->proximo == NULL){
+            free(baralho->inicio);
             baralho->inicio = NULL;
         }
         else{
-            aux2->proximo = NULL;
+            CARTA *aux = baralho->inicio->proximo;
+            baralho->inicio->proximo = NULL;
+            free(baralho->inicio);
+            baralho->inicio = aux;
         }
-        free(aux);
+
         baralho->tam--;
         return x;
     }
