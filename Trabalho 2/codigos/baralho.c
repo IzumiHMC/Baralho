@@ -30,7 +30,7 @@ INSTANCE criar_baralho(BARALHO *baralho, RELATORIO *relatorio, int n){
     
     BARALHO *prox_baralho = (BARALHO *)malloc(sizeof(BARALHO));
     prox_baralho->inicio = NULL;
-    prox_baralho->tam = 0;
+    prox_baralho->tam = n;
     
     for (int i = n; i >= 1; i--){
         BarPUSH(prox_baralho,i);
@@ -54,7 +54,6 @@ boolean BarPUSH(BARALHO *baralho, int x){
             carta->proximo = baralho->inicio;
             baralho->inicio = carta;
         }
-        baralho->tam++;
         return TRUE;
     }
     return FALSE;
@@ -74,18 +73,48 @@ int BarPOP(BARALHO *baralho){
             free(baralho->inicio);
             baralho->inicio = aux;
         }
-
-        baralho->tam--;
         return x;
     }
     return FALSE;
 }
 
 //adiciona ao relatorio
+
+//mal feito?
 boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x){
     if (baralho != NULL && relatorio != NULL){
+        CARTA *aux = baralho->inicio;
+        BARALHO baralhoBaixo = {NULL, 0};
+        BARALHO baralhoCima = {NULL, 0};
 
-        //code
+        while (aux->num != x){
+            BarPUSH(&baralhoBaixo,BarPOP(baralho));
+            aux = baralho->inicio;
+            if (aux == NULL){
+                return FALSE;
+            }
+        }
+
+        aux = baralho->inicio;
+
+        while (aux != NULL){
+            BarPUSH(&baralhoCima,BarPOP(baralho));
+            aux = baralho->inicio;
+        }
+
+        aux = baralhoBaixo.inicio;
+
+        while (aux != NULL){
+            BarPUSH(baralho,BarPOP(&baralhoBaixo));
+            aux = baralhoBaixo.inicio;
+        }
+
+        aux = baralhoCima.inicio;
+
+        while (aux != NULL){
+            BarPUSH(baralho,BarPOP(&baralhoCima));
+            aux = baralhoCima.inicio;
+        }
 
         PUSH(relatorio,criar_operacao("CORTA",x));
         return TRUE;
@@ -96,8 +125,26 @@ boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x){
 //adiciona ao relatorio
 boolean SOBE(BARALHO *baralho, RELATORIO *relatorio, int x){
     if (baralho != NULL && relatorio != NULL){
+        CARTA *aux = baralho->inicio;
+        BARALHO baralhoAteX = {NULL, 0};
 
-        //code
+        while (aux->num != x){
+            BarPUSH(&baralhoAteX,BarPOP(baralho));
+            aux = baralho->inicio;
+            if (aux == NULL){
+                return FALSE;
+            }
+        }
+
+        BarPOP(baralho);
+        aux = baralhoAteX.inicio;
+
+        while (aux != NULL){
+            BarPUSH(baralho,BarPOP(&baralhoAteX));
+            aux = baralhoAteX.inicio;
+        }
+        BarPUSH(baralho,x);
+
 
         PUSH(relatorio,criar_operacao("SOBE",x));
         return TRUE;
@@ -108,8 +155,13 @@ boolean SOBE(BARALHO *baralho, RELATORIO *relatorio, int x){
 //adiciona ao relatorio
 boolean VIRA(BARALHO *baralho, RELATORIO *relatorio){
     if (baralho != NULL && relatorio != NULL){
+        BARALHO baralhoVirado = {NULL, 0};
 
-        //code
+        while (baralho->inicio != NULL){
+            BarPUSH(&baralhoVirado,BarPOP(baralho));
+        }
+        baralho->inicio = baralhoVirado.inicio;
+        baralhoVirado.inicio = NULL;
 
         PUSH(relatorio,criar_operacao("VIRA",-727));
         return TRUE;
@@ -119,9 +171,21 @@ boolean VIRA(BARALHO *baralho, RELATORIO *relatorio){
 
 //adiciona ao relatorio
 boolean VIRATOPO(BARALHO *baralho, RELATORIO *relatorio, int k){
-    if (baralho != NULL && relatorio != NULL){
+    if (baralho != NULL && relatorio != NULL && baralho->tam >= k){
+        BARALHO aux = {NULL, 0};
+        BARALHO aux2 = {NULL, 0};
 
-        //code
+        for (int j = 1; j <= k; j++){
+            BarPUSH(&aux,BarPOP(baralho));
+        }
+
+        for (int j = 1; j <= k; j++){
+            BarPUSH(&aux2,BarPOP(&aux));
+        }
+
+        for (int j = 1; j <= k; j++){
+            BarPUSH(baralho,BarPOP(&aux2));
+        }
 
         PUSH(relatorio,criar_operacao("VIRATOPO",k));
         return TRUE;
@@ -161,21 +225,36 @@ boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio){
 }
 
 int pegar_carta(BARALHO *baralho, int p){
-    if (baralho != NULL){
+    if (baralho != NULL && p > 0 && baralho->tam >= p){
+        CARTA *aux = baralho->inicio;
+        for (int i = 1; i < p; i++){
+            aux = aux->proximo;
+        }
+        printf("%d\n", aux->num);
 
-        //code
-
+        return TRUE;
     }
+    printf("errooo\n");
+    printf("%d\n", baralho->tam);
     return FALSE;
 
 }
 
 int POSICAO(BARALHO *baralho, int x){
-    if (baralho != NULL){
+    if (baralho != NULL && x > 0 && baralho->tam >= x){
+        int pos = 1;
+        CARTA *aux = baralho->inicio;
 
-        //code
+        while (aux->num != x){
+            aux = aux->proximo;
+            pos++;
+        }
 
+        printf("%d\n", pos);
+        
+        return pos;
     }
+    printf("errooo\n");
     return FALSE;
 }
 

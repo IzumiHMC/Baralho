@@ -60,6 +60,7 @@ boolean mostrar_relatorio(RELATORIO *relatorio){
         for (int i = 0; i < relatorio->inicio; i++){
             printf("%s %d | ", relatorio->comandos[i].comando, relatorio->comandos[i].k);
         }
+        printf("\n");
         return TRUE;
     }
     return FALSE;

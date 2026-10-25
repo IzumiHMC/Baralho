@@ -40,7 +40,22 @@ int main(){
         }
     }
     else if (strcmp(rajada,"DESFAZ") == 0){
-        //????
+        for (int i = 0; i < numCartas; i++){
+            int dice = rand()%3;
+            if (dice == 0){
+                //CORTA x
+                printf("%s %d\n", "CORTA", 1+(rand()%numCartas));
+            }
+            else if (dice == 1){
+                //VIRA
+                printf("%s\n", "VIRA");
+            }
+            else{
+                //SOBE x
+                printf("%s %d\n", "SOBE", 1+(rand()%numCartas));
+            }
+            printf("DESFAZ\n");
+        }
     }
 
 

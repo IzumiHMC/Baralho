@@ -11,7 +11,7 @@ struct instance{
 };
 
 int main(){
-    char inputUsuario[9];
+    char inputUsuario[15];
     int fimLoop = 0;
 
     INSTANCE instance = criar_baralho(NULL,NULL, -1);
@@ -26,7 +26,6 @@ int main(){
         else if (strcmp(inputUsuario, "CORTA") == 0){
             int x;
             scanf("%d", &x);
-            printf("%d", x);
             CORTA(instance.baralho,instance.relatorio,x);
         }
         else if (strcmp(inputUsuario, "SOBE") == 0){
@@ -40,7 +39,7 @@ int main(){
         else if (strcmp(inputUsuario, "VIRATOPO") == 0){
             int k;
             scanf("%d", &k);
-            CORTA(instance.baralho,instance.relatorio,k);
+            VIRATOPO(instance.baralho,instance.relatorio,k);
         }
         else if (strcmp(inputUsuario, "DESFAZ") == 0){
             DESFAZ(instance.baralho,instance.relatorio);
@@ -61,6 +60,9 @@ int main(){
         else if (strcmp(inputUsuario, "FIM") == 0){
             FIM(instance.baralho,instance.relatorio);
             fimLoop = 1;   
+        }
+        else if (strcmp(inputUsuario, "relatorio") == 0){
+            mostrar_relatorio(instance.relatorio);
         }
     }
 
