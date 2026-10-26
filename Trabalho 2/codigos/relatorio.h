@@ -11,6 +11,7 @@ typedef struct operacao OPERACAO;
 struct operacao{
     char *comando;
     int k;
+    int pos;
 };
 
 struct relatorio{
@@ -28,10 +29,12 @@ boolean mostrar_relatorio(RELATORIO *relatorio);
 
 boolean apagar_relatorio(RELATORIO *relatorio);
 
-OPERACAO criar_operacao(char *comando, int k);
+OPERACAO criar_operacao(char *comando, int k, int pos);
 
 char *comando_operacao(RELATORIO *relatorio);
 
 int k_operacao(RELATORIO *relatorio);
+
+int pos_operacao(RELATORIO *relatorio);
 
 #endif

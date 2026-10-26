@@ -32,11 +32,13 @@ boolean PUSH(RELATORIO *relatorio, OPERACAO operacao){
             }
             relatorio->comandos[relatorio->inicio-1].comando = operacao.comando;
             relatorio->comandos[relatorio->inicio-1].k = operacao.k;
+            relatorio->comandos[relatorio->inicio-1].pos = operacao.pos;
             free(aux);
         }
         else{
             relatorio->comandos[relatorio->inicio].comando = operacao.comando;
             relatorio->comandos[relatorio->inicio].k = operacao.k;
+            relatorio->comandos[relatorio->inicio].pos = operacao.pos;
             relatorio->inicio++;
         }
         
@@ -51,14 +53,19 @@ OPERACAO POP(RELATORIO *relatorio){
         relatorio->inicio--;
         return relatorio->comandos[relatorio->inicio+1];
     }
-    return criar_operacao(NULL, FALSE);
+    return criar_operacao(NULL, -727, -727);
 }
 
 //acho q depois vou apagar essa funcao, eh so pra debug
 boolean mostrar_relatorio(RELATORIO *relatorio){
     if (relatorio != NULL && relatorio->inicio != 0){
         for (int i = 0; i < relatorio->inicio; i++){
-            printf("%s %d | ", relatorio->comandos[i].comando, relatorio->comandos[i].k);
+            if (strcmp(relatorio->comandos[i].comando,"VIRA") == 0){
+                printf("%s | ",relatorio->comandos[i].comando);
+            }
+            else{
+                printf("%s %d | ", relatorio->comandos[i].comando, relatorio->comandos[i].k);
+            }
         }
         printf("\n");
         return TRUE;
@@ -74,10 +81,11 @@ boolean apagar_relatorio(RELATORIO *relatorio){
     return FALSE;
 }
 
-OPERACAO criar_operacao(char *comando, int k){
+OPERACAO criar_operacao(char *comando, int k, int pos){
     OPERACAO operacao;
     operacao.comando = comando;
     operacao.k = k;
+    operacao.pos = pos;
 
     return operacao;
 }
@@ -92,6 +100,13 @@ char *comando_operacao(RELATORIO *relatorio){
 int k_operacao(RELATORIO *relatorio){
     if (relatorio != NULL && relatorio->inicio != 0){
         return relatorio->comandos[relatorio->inicio-1].k;
+    }
+    return FALSE;
+}
+
+int pos_operacao(RELATORIO *relatorio){
+    if (relatorio != NULL && relatorio->inicio != 0){
+        return relatorio->comandos[relatorio->inicio-1].pos;
     }
     return FALSE;
 }
