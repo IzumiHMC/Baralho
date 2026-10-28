@@ -85,8 +85,10 @@ int BarPOP(BARALHO *baralho){
 //adiciona ao relatorio
 
 //mal feito?
+
+//tempo  -  O(2n)
 boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
-    if (baralho != NULL && relatorio != NULL){
+    if (baralho != NULL && relatorio != NULL && x > 0 && baralho->tam >= x){
         CARTA *aux = baralho->inicio;
         BARALHO baralhoBaixo = {NULL, 0};
         BARALHO baralhoCima = {NULL, 0};
@@ -125,17 +127,16 @@ boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
         if (desfaz == FALSE){
             PUSH(relatorio,criar_operacao("CORTA",x, pos));
         }
-        else if (desfaz == TRUE){
-            POP(relatorio);
-        }
         return TRUE;
     }
+    printf("ERRO AO FAZER OPERACAO CORTA\n");
     return FALSE;
 }
 
 //adiciona ao relatorio
+//tempo  -  O(2pos(x))
 boolean SOBE(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
-    if (baralho != NULL && relatorio != NULL){
+    if (baralho != NULL && relatorio != NULL && x > 0 && baralho->tam >= x){
         CARTA *aux = baralho->inicio;
         BARALHO baralhoAteX = {NULL, 0};
 
@@ -163,10 +164,12 @@ boolean SOBE(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
         }
         return TRUE;
     }
+    printf("ERRO AO FAZER OPERACAO SOBE\n");
     return FALSE;
 }
 
 //adiciona ao relatorio
+//tempo  -  O(n)
 boolean VIRA(BARALHO *baralho, RELATORIO *relatorio, boolean desfaz){
     if (baralho != NULL && relatorio != NULL){
         BARALHO baralhoVirado = {NULL, 0};
@@ -180,15 +183,14 @@ boolean VIRA(BARALHO *baralho, RELATORIO *relatorio, boolean desfaz){
         if (desfaz == FALSE){
             PUSH(relatorio,criar_operacao("VIRA",-727,-727));
         }
-        else if (desfaz == TRUE){
-            POP(relatorio);
-        }
         return TRUE;
     }
+    printf("ERRO AO FAZER OPERACAO VIRA\n");
     return FALSE;
 }
 
 //adiciona ao relatorio
+//tempo  -  O(3k)
 boolean VIRATOPO(BARALHO *baralho, RELATORIO *relatorio, int k, boolean desfaz){
     if (baralho != NULL && relatorio != NULL && baralho->tam >= k){
         BARALHO aux = {NULL, 0};
@@ -209,11 +211,9 @@ boolean VIRATOPO(BARALHO *baralho, RELATORIO *relatorio, int k, boolean desfaz){
         if (desfaz == FALSE){
             PUSH(relatorio,criar_operacao("VIRATOPO",k,-727));
         }
-        else if (desfaz == TRUE){
-            POP(relatorio);
-        }
         return TRUE;
     }
+    printf("ERRO AO FAZER OPERACAO VIRATOPO\n");
     return FALSE;
 }
 
@@ -221,21 +221,41 @@ boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio){
     if (baralho != NULL && relatorio != NULL && relatorio->inicio != 0){
         if (strcmp(comando_operacao(relatorio),"CORTA") == 0){
             int pos = pos_operacao(relatorio);
-            CORTA(baralho,relatorio,pegar_carta(baralho,baralho->tam-pos+2,TRUE),TRUE);
+            //tempo  -  O(2n + (n-pos+2)%n) -> O(n)
+            CORTA(baralho,relatorio,pegar_carta(baralho,(baralho->tam-pos+2)%baralho->tam,TRUE),TRUE);
+            POP(relatorio);
         }
         else if (strcmp(comando_operacao(relatorio),"SOBE") == 0){
+            //tempo  -  O(n)
             int pos = pos_operacao(relatorio);
+            if (pos == baralho->tam){
+                //tempo  -  O(n)
+                VIRA(baralho,relatorio,TRUE);
+            }
+            else if (pos != 1){
+                //tempo  -  O(2n + pos+1 + 3(n-1) + n) -> O(n)
+                CORTA(baralho,relatorio,pegar_carta(baralho,pos+1,TRUE),TRUE);
+                VIRATOPO(baralho,relatorio,baralho->tam-pos,TRUE);
+                VIRA(baralho,relatorio,TRUE);
+                VIRATOPO(baralho,relatorio,pos-1,TRUE);
+            }
+            /*
             for (int i = 1; i < pos; i++){
                 SOBE(baralho,relatorio,pegar_carta(baralho,pos,TRUE),TRUE);
             }
+            */
             POP(relatorio);
         }
         else if (strcmp(comando_operacao(relatorio),"VIRA") == 0){
+            //tempo  -  O(n) 
             VIRA(baralho,relatorio,TRUE);
+            POP(relatorio);
         }
         else if (strcmp(comando_operacao(relatorio),"VIRATOPO") == 0){
+            //tempo  -  O(3k) -> se k for n: O(3n)  -> O(n)
             int k = k_operacao(relatorio);
             VIRATOPO(baralho,relatorio,k,TRUE);
+            POP(relatorio);
         }
 
         return TRUE;
@@ -244,6 +264,7 @@ boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio){
 }
 
 //operacao "CARTA p"
+//tempo  -  O(p)
 int pegar_carta(BARALHO *baralho, int p,boolean desfaz){
     if (baralho != NULL && p > 0 && baralho->tam >= p){
         CARTA *aux = baralho->inicio;
@@ -257,12 +278,11 @@ int pegar_carta(BARALHO *baralho, int p,boolean desfaz){
 
         return aux->num;
     }
-    printf("errooo\n");
-    printf("%d\n", baralho->tam);
+    printf("ERRO AO PEGAR A CARTA NA POSICAO p\n");
     return FALSE;
-
 }
 
+//tempo  -  O(pos(x))
 int POSICAO(BARALHO *baralho, int x, boolean desfaz){
     if (baralho != NULL && x > 0 && baralho->tam >= x){
         int pos = 1;
@@ -279,10 +299,11 @@ int POSICAO(BARALHO *baralho, int x, boolean desfaz){
         
         return pos;
     }
-    printf("errooo\n");
+    printf("ERRO AO PEGAR A POSICAO DA CARTA x\n");
     return FALSE;
 }
 
+//tempo  -  O(n)
 boolean MOSTRA(BARALHO *baralho){
     if (baralho != NULL){
         CARTA *aux = baralho->inicio;
@@ -297,6 +318,7 @@ boolean MOSTRA(BARALHO *baralho){
     return FALSE;
 }
 
+//tempo  -  O(n)
 boolean apagar_baralho(BARALHO *baralho){
     if (baralho != NULL){
         while (baralho->inicio != NULL){

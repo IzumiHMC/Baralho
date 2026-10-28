@@ -70,6 +70,7 @@ boolean mostrar_relatorio(RELATORIO *relatorio){
         printf("\n");
         return TRUE;
     }
+    printf("NENHUMA OPERACAO NO RELATORIO\n");
     return FALSE;
 }
 
