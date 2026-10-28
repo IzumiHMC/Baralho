@@ -58,6 +58,10 @@ boolean BarPUSH(BARALHO *baralho, int x){
         }
         return TRUE;
     }
+    fprintf(
+        stderr,
+        "ERRO AO FAZER BarPUSH: baralho null\n"
+    );
     return FALSE;
 }
 
@@ -79,6 +83,11 @@ int BarPOP(BARALHO *baralho){
         }
         return x;
     }
+    fprintf(
+        stderr,
+        "ERRO AO FAZER BarPOP\nPonteiro baralho: %p\nbaralho->inicio == NULL?\n",
+        baralho
+    );
     return FALSE;
 }
 
@@ -129,7 +138,11 @@ boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
         }
         return TRUE;
     }
-    printf("ERRO AO FAZER OPERACAO CORTA\n");
+    fprintf(
+        stderr,
+        "ERRO AO FAZER OPERACAO CORTA\nPonteiro baralho: %p\nPonteiro relatorio: %p\nx: %d\nbaralho->tam >= x?\n",
+        baralho, relatorio, x
+    );
     return FALSE;
 }
 
@@ -164,7 +177,11 @@ boolean SOBE(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
         }
         return TRUE;
     }
-    printf("ERRO AO FAZER OPERACAO SOBE\n");
+    fprintf(
+        stderr,
+        "ERRO AO FAZER OPERACAO SOBE\nPonteiro baralho: %p\nPonteiro relatorio: %p\nx: %d\nbaralho->tam >= x?\n",
+        baralho, relatorio, x
+    );
     return FALSE;
 }
 
@@ -185,7 +202,11 @@ boolean VIRA(BARALHO *baralho, RELATORIO *relatorio, boolean desfaz){
         }
         return TRUE;
     }
-    printf("ERRO AO FAZER OPERACAO VIRA\n");
+    fprintf(
+        stderr,
+        "ERRO AO FAZER OPERACAO VIRA\nPonteiro baralho: %p\nPonteiro relatorio: %p\n",
+        baralho, relatorio
+    );
     return FALSE;
 }
 
@@ -213,7 +234,11 @@ boolean VIRATOPO(BARALHO *baralho, RELATORIO *relatorio, int k, boolean desfaz){
         }
         return TRUE;
     }
-    printf("ERRO AO FAZER OPERACAO VIRATOPO\n");
+    fprintf(
+        stderr,
+        "ERRO AO FAZER OPERACAO VIRATOPO\nPonteiro baralho: %p\nPonteiro relatorio: %p\nbaralho->tam >= k?\n",
+        baralho, relatorio
+    );
     return FALSE;
 }
 
@@ -222,28 +247,19 @@ boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio){
         if (strcmp(comando_operacao(relatorio),"CORTA") == 0){
             int pos = pos_operacao(relatorio);
             //tempo  -  O(2n + (n-pos+2)%n) -> O(n)
-            CORTA(baralho,relatorio,pegar_carta(baralho,(baralho->tam-pos+2)%baralho->tam,TRUE),TRUE);
+            CORTA(baralho,relatorio,pegar_carta(baralho,1+(baralho->tam-pos+1)%baralho->tam,TRUE),TRUE);
             POP(relatorio);
         }
         else if (strcmp(comando_operacao(relatorio),"SOBE") == 0){
             //tempo  -  O(n)
             int pos = pos_operacao(relatorio);
-            if (pos == baralho->tam){
-                //tempo  -  O(n)
-                VIRA(baralho,relatorio,TRUE);
-            }
-            else if (pos != 1){
+            if (pos != 1){
                 //tempo  -  O(2n + pos+1 + 3(n-1) + n) -> O(n)
-                CORTA(baralho,relatorio,pegar_carta(baralho,pos+1,TRUE),TRUE);
+                CORTA(baralho,relatorio,pegar_carta(baralho,1+(pos)%baralho->tam,TRUE),TRUE);
                 VIRATOPO(baralho,relatorio,baralho->tam-pos,TRUE);
                 VIRA(baralho,relatorio,TRUE);
                 VIRATOPO(baralho,relatorio,pos-1,TRUE);
             }
-            /*
-            for (int i = 1; i < pos; i++){
-                SOBE(baralho,relatorio,pegar_carta(baralho,pos,TRUE),TRUE);
-            }
-            */
             POP(relatorio);
         }
         else if (strcmp(comando_operacao(relatorio),"VIRA") == 0){
@@ -260,6 +276,11 @@ boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio){
 
         return TRUE;
     }
+    fprintf(
+        stderr,
+        "ERRO AO FAZER OPERACAO DESFAZ\nPonteiro baralho: %p\nPonteiro relatorio: %p\nrelatorio->inicio == 0?\n",
+        baralho, relatorio
+    );
     return FALSE;
 }
 
@@ -278,7 +299,11 @@ int pegar_carta(BARALHO *baralho, int p,boolean desfaz){
 
         return aux->num;
     }
-    printf("ERRO AO PEGAR A CARTA NA POSICAO p\n");
+    fprintf(
+        stderr,
+        "ERRO AO PEGAR A CARTA NA POSICAO p\nPonteiro baralho: %p\np: %d\nbaralho->tam >= p?\n",
+        baralho, p
+    );
     return FALSE;
 }
 
@@ -299,7 +324,11 @@ int POSICAO(BARALHO *baralho, int x, boolean desfaz){
         
         return pos;
     }
-    printf("ERRO AO PEGAR A POSICAO DA CARTA x\n");
+    fprintf(
+        stderr,
+        "ERRO AO PEGAR A POSICAO DA CARTA x\nPonteiro baralho: %p\nx: %d\nbaralho->tam >= x?\n",
+        baralho, x
+    );
     return FALSE;
 }
 
@@ -315,6 +344,10 @@ boolean MOSTRA(BARALHO *baralho){
 
         return TRUE;
     }
+    fprintf(
+        stderr,
+        "ERRO AO FAZER OPERACAO MOSTRA: baralho null\n"
+    );  
     return FALSE;
 }
 
@@ -328,6 +361,10 @@ boolean apagar_baralho(BARALHO *baralho){
 
         return TRUE;
     }
+    fprintf(
+        stderr,
+        "ERRO AO APAGAR BARALHO: baralho null\n"
+    );  
     return FALSE;
 }
 

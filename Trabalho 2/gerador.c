@@ -15,51 +15,58 @@ int main(){
 
     srand(time(NULL));
 
-    scanf("%s %d", rajada, &numCartas);
+    if (scanf("%s %d", rajada, &numCartas) == 2){
+        printf("BARALHO %d\n", numCartas);
 
-    printf("BARALHO %d\n", numCartas);
-
-    if (strcmp(rajada,"SOBE") == 0){
-        imprime_rajadas(rajada,numCartas);
-    }
-    else if (strcmp(rajada,"CARTA") == 0){
-        imprime_rajadas(rajada,numCartas);
-    }
-    else if (strcmp(rajada,"POSICAO") == 0){
-        imprime_rajadas(rajada,numCartas);
-    }
-    else if (strcmp(rajada,"CORTA") == 0){
-        for (int i = 0;i < 2*numCartas; i++){
-            int coin = rand()%2;
-            if (coin == 0){
-                printf("%s %d\n", rajada, 1+(rand()%numCartas));
-            }
-            else{
-                printf("VIRA\n");
+        if (strcmp(rajada,"SOBE") == 0){
+            imprime_rajadas(rajada,numCartas);
+        }
+        else if (strcmp(rajada,"CARTA") == 0){
+            imprime_rajadas(rajada,numCartas);
+        }
+        else if (strcmp(rajada,"POSICAO") == 0){
+            imprime_rajadas(rajada,numCartas);
+        }
+        else if (strcmp(rajada,"CORTA") == 0){
+            for (int i = 0;i < 2*numCartas; i++){
+                int coin = rand()%2;
+                if (coin == 0){
+                    printf("%s %d\n", rajada, 1+(rand()%numCartas));
+                }
+                else{
+                    printf("VIRA\n");
+                }
             }
         }
-    }
-    else if (strcmp(rajada,"DESFAZ") == 0){
-        for (int i = 0; i < numCartas; i++){
-            int dice = rand()%3;
-            if (dice == 0){
-                //CORTA x
-                printf("%s %d\n", "CORTA", 1+(rand()%numCartas));
+        else if (strcmp(rajada,"DESFAZ") == 0){
+            for (int i = 0; i < numCartas; i++){
+                int dice = rand()%3;
+                if (dice == 0){
+                    //CORTA x
+                    printf("%s %d\n", "CORTA", 1+(rand()%numCartas));
+                }
+                else if (dice == 1){
+                    //VIRA
+                    printf("%s\n", "VIRA");
+                }
+                else{
+                    //SOBE x
+                    printf("%s %d\n", "SOBE", 1+(rand()%numCartas));
+                }
+                printf("DESFAZ\n");
             }
-            else if (dice == 1){
-                //VIRA
-                printf("%s\n", "VIRA");
-            }
-            else{
-                //SOBE x
-                printf("%s %d\n", "SOBE", 1+(rand()%numCartas));
-            }
-            printf("DESFAZ\n");
+            /*
+            pro jogo :3
+            for (int i = 0; i < numCartas; i++){
+                printf("DESFAZ\n");
+            }*/
         }
+        //printf("MOSTRA\n");
+        printf("FIM\n");
     }
-
-
-    printf("FIM");
+    else{
+        fprintf(stderr,"ERRO AO LER RAJADA\n");
+    }
 
     return 0;
 }

@@ -5,6 +5,8 @@
 #define TRUE 1
 #define FALSE 0
 
+#define FIMRELATORIO 100
+
 typedef struct relatorio RELATORIO;
 typedef struct operacao OPERACAO;
 

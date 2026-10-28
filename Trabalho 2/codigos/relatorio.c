@@ -19,21 +19,21 @@ RELATORIO *criar_relatorio(){
 //O "if == 100" vai usar uma pilha auxiliar pra tirar o primeiro elemento.
 //Quando vc coloca todos os elementos de uma pilha em outra, o ultimo elemento
 //se torna o primeiro e vice-versa
+//tempo  -  O(2*100) ou O(1)
 boolean PUSH(RELATORIO *relatorio, OPERACAO operacao){
     if (relatorio != NULL){
-        if (relatorio->inicio == 100){
-            RELATORIO *aux = (RELATORIO *)malloc(sizeof(RELATORIO));
-            for (int i = 0; i < relatorio->inicio; i++){
-                PUSH(aux,POP(relatorio));
+        if (relatorio->inicio == FIMRELATORIO){
+            RELATORIO aux = {0};
+            for (int i = 0; i < FIMRELATORIO; i++){
+                PUSH(&aux,POP(relatorio));
             }
-            POP(aux);
-            for (int i = 0; i < relatorio->inicio; i++){
-                PUSH(relatorio,POP(aux));
+            POP(&aux);
+            for (int i = 0; i < FIMRELATORIO; i++){
+                PUSH(relatorio,POP(&aux));
             }
             relatorio->comandos[relatorio->inicio-1].comando = operacao.comando;
             relatorio->comandos[relatorio->inicio-1].k = operacao.k;
             relatorio->comandos[relatorio->inicio-1].pos = operacao.pos;
-            free(aux);
         }
         else{
             relatorio->comandos[relatorio->inicio].comando = operacao.comando;
@@ -44,10 +44,14 @@ boolean PUSH(RELATORIO *relatorio, OPERACAO operacao){
         
         return TRUE;
     }
-
+    fprintf(
+        stderr,
+        "ERRO AO DAR PUSH: relatorio null\n"
+    );
     return FALSE;
 }
 
+//tempo  -  O(1)
 OPERACAO POP(RELATORIO *relatorio){
     if (relatorio != NULL && relatorio->inicio != 0){
         relatorio->inicio--;
@@ -68,6 +72,7 @@ boolean mostrar_relatorio(RELATORIO *relatorio){
             }
         }
         printf("\n");
+        printf("inicio: %d\n", relatorio->inicio);
         return TRUE;
     }
     printf("NENHUMA OPERACAO NO RELATORIO\n");
@@ -79,6 +84,10 @@ boolean apagar_relatorio(RELATORIO *relatorio){
         free(relatorio);
         return TRUE;
     }
+    fprintf(
+        stderr,
+        "ERRO AO APAGAR RELATORIO: relatorio null\n"
+    );
     return FALSE;
 }
 
@@ -95,6 +104,11 @@ char *comando_operacao(RELATORIO *relatorio){
     if (relatorio != NULL && relatorio->inicio != 0){
         return relatorio->comandos[relatorio->inicio-1].comando;
     }
+    fprintf(
+        stderr,
+        "ERRO AO RETORNAR comando\nPonteiro relatorio: %p\nrelatorio->inicio == 0?\n",
+        relatorio
+    );
     return NULL;
 }
 
@@ -102,6 +116,11 @@ int k_operacao(RELATORIO *relatorio){
     if (relatorio != NULL && relatorio->inicio != 0){
         return relatorio->comandos[relatorio->inicio-1].k;
     }
+    fprintf(
+        stderr,
+        "ERRO AO RETORNAR k\nPonteiro relatorio: %p\nrelatorio->inicio == 0?\n",
+        relatorio
+    );
     return FALSE;
 }
 
@@ -109,5 +128,10 @@ int pos_operacao(RELATORIO *relatorio){
     if (relatorio != NULL && relatorio->inicio != 0){
         return relatorio->comandos[relatorio->inicio-1].pos;
     }
+    fprintf(
+        stderr,
+        "ERRO AO RETORNAR pos\nPonteiro relatorio: %p\nrelatorio->inicio == 0?\n",
+        relatorio
+    );
     return FALSE;
 }

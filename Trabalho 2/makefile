@@ -6,6 +6,7 @@ all: ex
 
 ex: $(OBJS)
 	$(CC) $(CFLAGS) $(SRCS) -o ./ex
+	$(CC) $(CFLAGS) ./gerador.c -o ./ger
 
 clean: 
 	rm -f *.o ex
