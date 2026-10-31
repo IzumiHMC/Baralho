@@ -43,7 +43,6 @@ INSTANCE criar_baralho(BARALHO *baralho, RELATORIO *relatorio, int n){
 }
 
 //tempo  -  O(1)
-//memoria  -  ?
 boolean BarPUSH(BARALHO *baralho, int x){
     if (baralho != NULL){
         CARTA *carta = (CARTA *)malloc(sizeof(CARTA));
@@ -66,7 +65,6 @@ boolean BarPUSH(BARALHO *baralho, int x){
 }
 
 //tempo  -  O(1)
-//memoria  -  ?
 int BarPOP(BARALHO *baralho){
     if (baralho != NULL && baralho->inicio != NULL){
         int x;
@@ -92,9 +90,6 @@ int BarPOP(BARALHO *baralho){
 }
 
 //adiciona ao relatorio
-
-//mal feito?
-
 //tempo  -  O(2n)
 boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
     if (baralho != NULL && relatorio != NULL && x > 0 && baralho->tam >= x){
@@ -102,7 +97,7 @@ boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
         BARALHO baralhoBaixo = {NULL, 0};
         BARALHO baralhoCima = {NULL, 0};
 
-        int pos = POSICAO(baralho,x,TRUE);
+        int pos = POSICAO(baralho,x, TRUE);
 
         while (aux->num != x){
             BarPUSH(&baralhoBaixo,BarPOP(baralho));
@@ -147,13 +142,13 @@ boolean CORTA(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
 }
 
 //adiciona ao relatorio
-//tempo  -  O(2pos(x))
+//tempo  -  O(2pos(x)) -> O(2n)
 boolean SOBE(BARALHO *baralho, RELATORIO *relatorio, int x, boolean desfaz){
     if (baralho != NULL && relatorio != NULL && x > 0 && baralho->tam >= x){
         CARTA *aux = baralho->inicio;
         BARALHO baralhoAteX = {NULL, 0};
 
-        int pos = POSICAO(baralho,x,TRUE);
+        int pos = POSICAO(baralho,x, TRUE);
 
         while (aux->num != x){
             BarPUSH(&baralhoAteX,BarPOP(baralho));
@@ -211,7 +206,7 @@ boolean VIRA(BARALHO *baralho, RELATORIO *relatorio, boolean desfaz){
 }
 
 //adiciona ao relatorio
-//tempo  -  O(3k)
+//tempo  -  O(3k) -> O(3n) -> O(n)
 boolean VIRATOPO(BARALHO *baralho, RELATORIO *relatorio, int k, boolean desfaz){
     if (baralho != NULL && relatorio != NULL && baralho->tam >= k){
         BARALHO aux = {NULL, 0};
@@ -247,7 +242,7 @@ boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio){
         if (strcmp(comando_operacao(relatorio),"CORTA") == 0){
             int pos = pos_operacao(relatorio);
             //tempo  -  O(2n + (n-pos+2)%n) -> O(n)
-            CORTA(baralho,relatorio,pegar_carta(baralho,1+(baralho->tam-pos+1)%baralho->tam,TRUE),TRUE);
+            CORTA(baralho,relatorio,pegar_carta(baralho,1+(baralho->tam-pos+1)%baralho->tam, TRUE),TRUE);
             POP(relatorio);
         }
         else if (strcmp(comando_operacao(relatorio),"SOBE") == 0){
@@ -255,7 +250,7 @@ boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio){
             int pos = pos_operacao(relatorio);
             if (pos != 1){
                 //tempo  -  O(2n + pos+1 + 3(n-1) + n) -> O(n)
-                CORTA(baralho,relatorio,pegar_carta(baralho,1+(pos)%baralho->tam,TRUE),TRUE);
+                CORTA(baralho,relatorio,pegar_carta(baralho,1+(pos)%baralho->tam, TRUE),TRUE);
                 VIRATOPO(baralho,relatorio,baralho->tam-pos,TRUE);
                 VIRA(baralho,relatorio,TRUE);
                 VIRATOPO(baralho,relatorio,pos-1,TRUE);
@@ -285,18 +280,16 @@ boolean DESFAZ(BARALHO *baralho, RELATORIO *relatorio){
 }
 
 //operacao "CARTA p"
-//tempo  -  O(p)
-int pegar_carta(BARALHO *baralho, int p,boolean desfaz){
+//tempo  -  O(p) -> O(n)
+int pegar_carta(BARALHO *baralho, int p, boolean desfaz){
     if (baralho != NULL && p > 0 && baralho->tam >= p){
         CARTA *aux = baralho->inicio;
         for (int i = 1; i < p; i++){
             aux = aux->proximo;
         }
-
         if (desfaz == FALSE){
             printf("%d\n", aux->num);
         }
-
         return aux->num;
     }
     fprintf(
@@ -307,7 +300,7 @@ int pegar_carta(BARALHO *baralho, int p,boolean desfaz){
     return FALSE;
 }
 
-//tempo  -  O(pos(x))
+//tempo  -  O(pos(x)) -> O(n)
 int POSICAO(BARALHO *baralho, int x, boolean desfaz){
     if (baralho != NULL && x > 0 && baralho->tam >= x){
         int pos = 1;
@@ -361,10 +354,12 @@ boolean apagar_baralho(BARALHO *baralho){
 
         return TRUE;
     }
+    /*
     fprintf(
         stderr,
         "ERRO AO APAGAR BARALHO: baralho null\n"
     );  
+    */
     return FALSE;
 }
 

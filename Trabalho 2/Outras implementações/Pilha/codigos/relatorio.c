@@ -84,10 +84,12 @@ boolean apagar_relatorio(RELATORIO *relatorio){
         free(relatorio);
         return TRUE;
     }
+    /*
     fprintf(
         stderr,
         "ERRO AO APAGAR RELATORIO: relatorio null\n"
     );
+    */
     return FALSE;
 }
 

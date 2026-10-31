@@ -1,14 +1,21 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -O2
-SRCS = $(wildcard ./codigos/*.c)
+CC      = gcc
+CFLAGS  = -std=c11 -Wall -Wextra -O2
 
-all: ex
 
-ex: $(OBJS)
-	$(CC) $(CFLAGS) $(SRCS) -o ./ex
-	$(CC) $(CFLAGS) ./gerador.c -o ./ger
+PROGRAMA = deck
 
-clean: 
-	rm -f *.o ex
+SRC_MAIN = main.c deck.c historico.c
+HEADERS  = $(wildcard *.h)
 
-.PHONY: clean ex
+all: $(PROGRAMA) gerador
+
+$(PROGRAMA): $(SRC_MAIN) $(HEADERS)
+	$(CC) $(CFLAGS) $(SRC_MAIN) -o $(PROGRAMA)
+
+gerador: gerador.c
+	$(CC) $(CFLAGS) gerador.c -o gerador
+
+clean:
+	rm -f $(PROGRAMA) gerador
+
+.PHONY: all clean

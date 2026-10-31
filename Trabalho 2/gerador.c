@@ -9,6 +9,34 @@ void imprime_rajadas(char *rajada, int numCartas){
     }
 }
 
+void imprime_desfaz(char *rajada, int numCartas){
+    for (int i = 0; i < numCartas; i++){
+        int dice = rand()%3;
+        if (dice == 0){
+            //CORTA x
+            printf("%s %d\n", "CORTA", 1+(rand()%numCartas));
+        }
+        else if (dice == 1){
+            //VIRA
+            printf("%s\n", "VIRA");
+        }
+        else{
+            //SOBE x
+            printf("%s %d\n", "SOBE", 1+(rand()%numCartas));
+        }
+        if (strcmp(rajada, "DESFAZ") == 0){
+            printf("DESFAZ\n");
+        }
+    }
+    //pro jogo :3
+    if (strcmp(rajada, "JOGO") == 0){
+        for (int i = 0; i < numCartas; i++){
+            printf("DESFAZ\n");
+        }
+        printf("MOSTRA\n");
+    }
+}
+
 int main(){
     char rajada[9];
     int numCartas;
@@ -39,29 +67,11 @@ int main(){
             }
         }
         else if (strcmp(rajada,"DESFAZ") == 0){
-            for (int i = 0; i < numCartas; i++){
-                int dice = rand()%3;
-                if (dice == 0){
-                    //CORTA x
-                    printf("%s %d\n", "CORTA", 1+(rand()%numCartas));
-                }
-                else if (dice == 1){
-                    //VIRA
-                    printf("%s\n", "VIRA");
-                }
-                else{
-                    //SOBE x
-                    printf("%s %d\n", "SOBE", 1+(rand()%numCartas));
-                }
-                printf("DESFAZ\n");
-            }
-            /*
-            pro jogo :3
-            for (int i = 0; i < numCartas; i++){
-                printf("DESFAZ\n");
-            }*/
+            imprime_desfaz(rajada, numCartas);
         }
-        //printf("MOSTRA\n");
+        else if (strcmp(rajada, "JOGO") == 0){
+            imprime_desfaz(rajada, numCartas);
+        }
         printf("FIM\n");
     }
     else{

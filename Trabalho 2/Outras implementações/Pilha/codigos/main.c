@@ -4,6 +4,9 @@
 #include "baralho.h"
 #include "relatorio.h"
 
+//So um aviso: ha uma infeliz denominacao nesse trabalho, chamar o historico de "relatorio"
+//eh possivel ver infos do relatorio, quando o programa estiver rodando, digitando "relatorio"
+
 typedef struct instance INSTANCE;
 struct instance{
     BARALHO *baralho;
@@ -17,7 +20,8 @@ int main(){
     INSTANCE instance = criar_baralho(NULL,NULL, -1);
 
     while (fimLoop == 0){
-        if (scanf("%s", inputUsuario) == 1){
+        int returnScanf = scanf("%s", inputUsuario);
+        if (returnScanf == 1){
             if (strcmp(inputUsuario, "BARALHO") == 0){
                 int n = 0;
                 if (scanf("%d", &n) == 1){
@@ -90,7 +94,11 @@ int main(){
             }
         }
         else{
-            printf("ERRO AO LER INPUT DE OPERACAO\n");
+            fprintf(
+                stderr,
+                "=======\nERRO AO LER INPUT DE OPERACAO\nreturn scanf: %d\ninputUsuario: %s\n",
+                returnScanf, inputUsuario
+            );
         }
 
     }
